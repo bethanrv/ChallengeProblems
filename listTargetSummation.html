@@ -1,0 +1,118 @@
+
+<script type="text/javascript">
+    /* PROBLEM...
+    Given a list of integers S and a target number k, write a function that returns a subset of S that adds up to k.
+    If such a subset cannot be made, then return no solution.
+
+    Integers can appear more than once in the list.
+    You may assume all numbers in the list are positive.
+
+    For example,
+    given S = [12, 1, 61, 5, 9, 2] and k = 24,
+    return [12, 9, 2, 1] since it sums up to 24.
+    */
+
+
+    //properties =======================================================
+    let combos = {}; // store each index, and combinations of indicies, as a key. As a value, store the sum of those indicides... use these combos to compute possible sums
+    // seeds are used with math.random() to set properties of the propblem...
+    let SIZE_SEED = 100; // how large should the input array be at max?
+    let NUMBERS_SEED = 100; //how large should the number inside the array be at max?
+    let TARGET_SEED = 1000; // how large should the target be at max?
+
+    //start problem...
+    window.onload = function() {
+
+
+      let numberOfTests = 10;
+      let testNum = 0;
+
+      while(testNum < numberOfTests){
+        let listToSum = randList(); //create random list of numbers
+        let targetSum = randTarget(); //create random target to try to sum to with random numbers list
+        // let listToSum = [1,1,2]
+        // let targetSum = 6;
+
+        console.log(listToSum, targetSum)
+
+        console.log(getSumIndicies(listToSum,targetSum)) // outputs numbers that sum to target as well as target
+
+        testNum++;
+      }
+
+
+    };
+
+    //get random list of integers
+    function randList(){
+        let list = [];
+        let i = 0;
+        let size = parseInt(Math.random()*SIZE_SEED)+1; // size of list determine by size seed
+        while(i < size){
+          list[i] = parseInt(Math.random()*NUMBERS_SEED)+1; // numbers in list determined by numbers seed
+          i++;
+        }
+        return list;
+    }
+
+    //get random target integer to sum to
+    function randTarget(){
+      return parseInt(Math.random()*TARGET_SEED)+1; // target determined by target seed
+    }
+
+    //get indicies that sum to target nums
+    //input: list of numbers to sum, target number to sum to
+    //output: calls getNums to report numbers used to sum to target sum, or return no solution
+    function getSumIndicies(listToSum, targetSum){
+      //iterate thru list, saving combos of indecies and resulting sums
+      combos = {}
+      for(var i = 0; i < listToSum.length; i++){ //iterating over listToSum
+
+        //store combos with other combos
+        for(var combo in combos){
+          //check if we summed to target
+          if(listToSum[i] + combos[combo] == targetSum) {
+            //found target -> return and parse input
+            return getNums(i + ',' + combo, listToSum, targetSum)
+          }
+          else if(listToSum[i] + combos[combo] < targetSum) // only create new combos of sum < targetSum
+            combos[i + ',' + combo] = listToSum[i] + combos[combo];
+
+        }
+
+        combos[i] = listToSum[i];
+        if(combos[i] == targetSum) return combos[i]
+
+        //store combos with other indicies
+        let backPointerIndex = 1;
+        while(i - backPointerIndex > 0){
+
+          //check if we summed to target
+          if(listToSum[i] + listToSum[i-backPointerIndex] == targetSum) {return getNums(i + ',' + (i-backPointerIndex), listToSum, targetSum);} //found target -> return and parse input
+          else if(listToSum[i] + listToSum[i-backPointerIndex] < targetSum) // only create new combos of sum < targetSum
+            combos[i + ',' + (i-backPointerIndex)] = listToSum[i] + listToSum[i-backPointerIndex];
+
+          backPointerIndex++;
+        }
+      }
+      //found no working combos...
+      return 'no solution';
+    }
+
+    //parse output for return... getsNums from solution indecies and parses into nice equation
+    function getNums(nums, list, targetSum){
+      if(Number.isInteger(nums))return nums + ' = ' + targetSum; //just one number?
+      nums = nums.split(','); // take out commas
+      let returnStr = '';
+      for(var num in nums){
+        returnStr += list[nums[parseInt(num)]] + " + "; //add in plus sign
+      }
+      return returnStr.substring(0, returnStr.lastIndexOf('+')) + ' = ' + targetSum; //add equals sign and target
+    }
+
+
+
+
+
+
+</script>
