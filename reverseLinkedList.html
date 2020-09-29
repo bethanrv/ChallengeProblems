@@ -1,0 +1,110 @@
+<script type="text/javascript">
+
+   //start problem...
+   window.onload = function() {
+
+     //create new linked list
+     const linkedList = new LinkedList();
+
+     //add data to LinkedList
+     let entryCap = 10;
+     let entryNum = 0;
+     while(entryNum < entryCap){
+       linkedList.add(entryNum)
+       entryNum++;
+     }
+
+     //print linked list for viewing
+     console.log('current list... ' + linkedList.print())
+
+
+     //reverse linked list
+     console.log('Reversing')
+     console.log('Beep')
+     console.log('Boop')
+     linkedList.reverse();
+     console.log('reversed list...' + linkedList.print())
+
+   }
+
+  //Node class for linked list...
+  //stores data and pointer to next node
+  class Node {
+   constructor(data){
+    this.data = data;
+    this.next;
+    this.prev;
+   }
+  }
+
+  //linked list class
+  class LinkedList {
+    constructor(){
+      this.head; //establish start
+    }
+
+    print(){ //function to view contents
+      let nodes = [];
+      let pointer = this.head;
+      while(!(pointer === undefined)){
+        nodes.push(pointer.data);
+        pointer = pointer.next;
+      }
+      return nodes;
+    }
+
+    add(data){ //function to add a node to the end of the list
+      if(this.head === undefined){ //no contents? add at start
+        this.head = new Node(data);
+      }
+      else{
+        let pointer = this.head; //starting point
+        let prev = this.head;// keep track of previous node to link up later
+        while(!(pointer.next === undefined)){ //get to the end of the list...
+          prev = pointer;
+          pointer = pointer.next;
+        }
+        pointer.next = new Node(data); //add new node
+        pointer.next.prev = prev; //link with previous node
+      }
+    }
+
+    reverse(){ //reverse the current list in place
+      let head = this.head;
+      let tail = this.getTail();
+      let length = this.getLength();
+      let pointerNum = 0;
+      while(pointerNum < length/2){ //make swaps until we reach the middle
+        //swap head and tail, then move head and tail inward
+        let temp = head.data;
+        head.data = tail.data;
+        tail.data = temp;
+        head = head.next;
+        tail = tail.prev;
+        pointerNum++;
+      }
+    }
+
+    //return node at the end
+    getTail(){
+      let pointer = this.head;
+      while(!(pointer.next === undefined)){ // iterate to end
+        pointer = pointer.next;
+      }
+      return pointer;
+    }
+
+    //get the length of the list
+    getLength(){
+      let pointer = this.head;
+      let count = 0;
+      while(!(pointer.next === undefined)){ //iterate to end, incrementing counter
+        pointer = pointer.next;
+        count++;
+      }
+      return count;
+    }
+
+  }
+
+</script>
