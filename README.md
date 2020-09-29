@@ -1,4 +1,4 @@
-# ChellengeProblems
+# ChallengeProblems
 Challenge Problems Asked By Daily Coding Problems
 
 Solution provided in JS.
