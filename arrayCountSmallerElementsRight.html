@@ -1,0 +1,79 @@
+<script type="text/javascript">
+
+  /*
+    Problem: Given an array of integers,
+             return a new array where each
+             element in the array is the number
+             of smaller elements to the right of
+             that original input array.
+
+    Example: Given [3, 4, 9, 6, 1],
+             Return [1, 1, 2, 1, 0]
+  */
+
+  // on opening page...
+  window.onload = function(){
+
+    //create input array
+    let inputArray = [3,4,9,6,1];
+    // let inputArray = [1,2,3,4,5,6];
+    // let inputArray = [100,99,98,97,4,3,2,1];
+    console.log('Given ' + inputArray + '...');
+    console.log('Return an array of counts of smaller rightward elements...');
+
+    //count smaller right elements and report as array in console
+    let countArray = countSmallerRightElements(inputArray);
+    console.log(countArray)
+
+    //test output
+    let testResult = testOutput(inputArray, countArray)
+    if(testResult) console.log('passed')
+    else console.log('failed')
+  }
+
+
+  //given int array, return array of counts of smaller right elements
+  function countSmallerRightElements(arr){
+
+    let countArr = newZeroArray(arr.length); //array of counts to return
+
+    //for each element in input arr, check if following elements are smaller
+    for(var i = 0; i<arr.length; i++){
+      for(var j = i+1; j<arr.length; j++){
+        if(arr[j] < arr[i]) countArr[i]++;
+      }
+    }
+
+    return countArr;
+  }
+
+  //return array of given length, filled with zeros
+  function newZeroArray(len){
+    return new Array(len).fill(0);
+  }
+
+  //test if output matches expected output
+  function testOutput(input, output){
+    if(arrayEquals(input,[3, 4, 9, 6, 1])){ //example case
+      return arrayEquals(output, [1, 1, 2, 1, 0]);
+    }
+    else if(arrayEquals(input, [1,2,3,4,5,6])){ //all zero reult case
+      return arrayEquals(output, [0, 0, 0, 0, 0, 0]);
+    }
+    else if(arrayEquals(input, [100,99,98,97,4,3,2,1])){ //descending order case
+      return arrayEquals(output, [7, 6, 5, 4, 3, 2, 1, 0]);
+    }
+  }
+
+
+  //test if arrays are equal
+  function arrayEquals(arrA, arrB){
+    if(arrA.length != arrB.length) {return false;}
+    for(var i = 0; i < arrA.length; i++){
+      if(arrA[i] != arrB[i]){return false;}
+    }
+    return true;
+  }
+
+
+</script>
