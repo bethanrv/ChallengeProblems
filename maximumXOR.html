@@ -1,0 +1,141 @@
+<script type="text/javascript">
+
+  /*
+    Problem: Given an array of integers, find the maximum XOR of any two elements.
+
+    + Do not use an xor opertor
+  */
+
+  window.onload = function(){
+
+    //create an array of ints to operate on
+    let inputArray = [15, 17, 0 , 2, 13, 99, 113, 12];
+    console.log('Given ' + inputArray);
+
+    //get max XOR
+    let maxXOR = getMaxXOR(inputArray);
+    console.log('The maximum XOR sum of two elements is ' + maxXOR);
+  };
+
+
+  //given int array, return maximum xor of two elements
+  function getMaxXOR(arr){
+
+    //initalize maxima to 0
+    let maxXOR = 0;
+    let maxI = 0;
+    let maxJ = 0;
+
+    for(var i = 0; i < arr.length; i++) { //loop over each element
+
+      let elementIBinary = getBinaryForm(arr[i]); //store current element in binary form
+
+      for(var j = i+1; j < arr.length; j++){ //loop over all following elements
+
+        //store next element in binary
+        let elementJBinary = getBinaryForm(arr[j]);
+
+        //calculate xor of elemnts i and j
+        let XORSum = parseInt(getXORSum(elementIBinary, elementJBinary));
+
+        //check if we found a new max
+        if(XORSum > maxXOR){
+          //report to console
+          console.log('new max identified... ' + elementIBinary + '(' + binaryToInt(elementIBinary) + ')' + ' xor ' + elementJBinary + '(' + binaryToInt(elementJBinary) + ')' + ' = ' + XORSum + '(' + binaryToInt(XORSum) + ')' )
+          //update max
+          maxXOR = XORSum;
+          maxI = elementIBinary;
+          maxJ = elementJBinary;
+         }
+
+      }
+    }
+
+    console.log('max given by ' + binaryToInt(maxI) + ' XOR ' + binaryToInt(maxJ));
+    return binaryToInt(maxXOR);
+
+  }
+
+
+  //get binary form of given int - recusive launcher function
+  function getBinaryForm(int){
+    return getBinaryRecursive(int, 0);
+  }
+
+  //get binary form of given int...
+  //add to sum each call and subtract from input
+  //stop when input is 0
+  function getBinaryRecursive(input, sum){
+
+
+    //base case
+    if(input === 0)
+      return sum;
+
+    //find nearest power of 2 that is less than input
+    let nearestPowerOfTwo = getNearestPowerOfTwo(input);
+
+    //add to sum... 10 raised to the nearest power of two (for binary representation)
+    //subrtact from input... 2 raised to the nearest power of two
+    return getBinaryRecursive(input - Math.pow(2, nearestPowerOfTwo), sum + Math.pow(10, nearestPowerOfTwo));
+  }
+
+
+  //get int form (base 10) of given binary input
+  function binaryToInt(input){
+    let sum = 0;
+    let inputStr = input.toString();
+    //for each bit, add to total sum
+    for(var i = 0; i < inputStr.length; i++){
+      sum += parseInt(inputStr[i]) * Math.pow(2, inputStr.length - 1 - i); //add 2^i * current bit
+    }
+    return sum;
+  }
+
+
+  //get nearest power of two that is less than input
+  function getNearestPowerOfTwo(input){
+    //starting at 0, check what power of two exceeds input and return the previous power
+    let power = 0;
+    while(Math.pow(2, power+1) <= input){
+      power++;
+    }
+    return power;
+  }
+
+
+  //get xor sum of given binary nums
+  function getXORSum(binaryInputA, binaryInputB){
+
+    let XORSum = ''; //init to empty str
+
+    //format each as a string
+    binaryStrA = binaryInputA.toString();
+    binaryStrB = binaryInputB.toString();
+
+    //pad the front of the smaller string with 0s
+    if(binaryStrA.length > binaryStrB.length) binaryStrB = addPadding(binaryStrB, binaryStrA.length - binaryStrB.length);
+    else binaryStrA = addPadding(binaryStrA, binaryStrB.length - binaryStrA.length);
+
+    //iterate from 0 to length of binary str, check if sum of bits at i = 1... if so, add 1 to xor sum, otherwise add 0
+    for(var i = 0; i<binaryStrA.length; i++){
+      if(parseInt(binaryStrA[i]) + parseInt(binaryStrB[i]) == 1) XORSum += '1';
+      else XORSum += '0';
+    }
+
+    return XORSum;
+  }
+
+  //add padding to front of binary form - add 0s
+  function addPadding(str, padSize){
+    let pad = '';
+    for(var i = 0; i < padSize; i++ ){
+      pad += '0';
+    }
+    return pad + str;
+  }
+
+
+
+
+</script>
